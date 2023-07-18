@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
-import defaultRoutes from "../../routes/default/index.js";
+import defaultRoutes from "../index.js";
 import fastify from "fastify";
 
 
