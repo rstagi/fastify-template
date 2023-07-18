@@ -9,22 +9,26 @@ import fastify from 'fastify'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-export default async function build() {
-  const app = fastify({ logger: { level: process.env.LOG_LEVEL || 'info' } })
+export default async function build(config: { LOG_LEVEL?: string } = {}) {
+  const app = fastify({
+    logger: { level: config.LOG_LEVEL || 'info' }
+  })
 
   await app.register(fastifySwagger)
   await app.register(fastifySwaggerUI, {
     routePrefix: '/documentation',
   })
   
-  app.register(autoLoad, {
+  await app.register(autoLoad, {
     dir: join(__dirname, 'plugins')
   })
   
-  app.register(autoLoad, {
+  await app.register(autoLoad, {
     dir: join(__dirname, 'routes'),
+    ignoreFilter(path) {
+      return path.includes('__tests__')
+    },
   })
 
   return app
 }
-

@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:old": "npm run build && node --loader tsx --test ./src/**/__tests__/**/*.test.{ts,js}",
-    "test": "node ./src/runTests.js 'src/**/__tests__/**/*.test.{ts,js}'",
+    "test": "npm run build && node ./src/runTests.js 'src/**/__tests__/**/*.test.{ts,js}'",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"
   },

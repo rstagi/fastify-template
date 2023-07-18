@@ -1,17 +1,18 @@
 import { glob } from 'glob';
-import { spawn } from 'child_process';
+import { spawnSync } from 'node:child_process';
 
 console.log(`Running all tests matching ${process.argv[2]}`);
 const files = await glob(process.argv[2], { nodir: true });
-files.forEach((file) => {
+
+for (const file of files) {
   const args = [];
   if (file.split('.').pop() === 'ts') {
     args.push('--loader', 'tsx');
   }
 
-  console.log(`Running tests in ${file}`);
-  spawn(
-    'node',
-    [...args, '--test', file]
-  );
-});
+  const cmd = ['node', [...args, '--test', file]]
+  console.log(`\nRunning ${cmd.flat().join(' ')}`);
+
+  // TODO use spawn instead of spawnSync, with better output management
+  spawnSync(...cmd, { stdio: 'inherit' });
+}
