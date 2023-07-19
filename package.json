@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm run build && node ./src/runTests.js 'src/**/__tests__/**/*.test.{ts,js}'",
+    "test": "tsc --noEmit && node ./runTests.js 'src/**/__tests__/**/*.test.{ts,js}'",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"
   },
@@ -15,7 +15,6 @@
   "devDependencies": {
     "@tsconfig/node-lts": "^18.12.3",
     "@types/node": "^20.4.2",
-    "glob": "^10.3.3",
     "ts-node": "^10.9.1",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6"
@@ -25,6 +24,7 @@
     "@fastify/swagger": "^8.8.0",
     "@fastify/swagger-ui": "^1.9.2",
     "fastify": "^4.20.0",
-    "fastify-plugin": "^4.5.0"
+    "fastify-plugin": "^4.5.0",
+    "glob": "^10.3.3"
   }
 }

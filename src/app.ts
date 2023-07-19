@@ -1,10 +1,12 @@
-import autoLoad from '@fastify/autoload'
 import fastifySwagger from '@fastify/swagger'
 import fastifySwaggerUI from '@fastify/swagger-ui'
 
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
 import fastify from 'fastify'
+
+import autoload from './utils/autoload.js'
+
+import { fileURLToPath } from 'url'
+import { join, dirname } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -19,16 +21,8 @@ export default async function build(config: { LOG_LEVEL?: string } = {}) {
     routePrefix: '/documentation',
   })
   
-  await app.register(autoLoad, {
-    dir: join(__dirname, 'plugins')
-  })
-  
-  await app.register(autoLoad, {
-    dir: join(__dirname, 'routes'),
-    ignoreFilter(path) {
-      return path.includes('__tests__')
-    },
-  })
+  await app.register(autoload, { path: join(__dirname, 'plugins') })
+  await app.register(autoload, { path: join(__dirname, 'routes') })
 
   return app
 }
