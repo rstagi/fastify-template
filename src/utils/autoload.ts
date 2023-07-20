@@ -1,3 +1,6 @@
+/**
+ * Autoloads all plugins and routes contained in all the subdirectories of a given path.
+ */
 import { FastifyPluginCallback } from "fastify"
 import fp from 'fastify-plugin'
 import { statSync } from "fs";
