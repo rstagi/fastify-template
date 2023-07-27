@@ -5,7 +5,7 @@ const featureFlagsPlugin: FastifyPluginCallback = (app, opts, done) => {
   // TODO check if mongodb has been configured
   // TODO get feature flags from mongodb
   // TODO add getFeatureFlags and reloadFeatureFlags to fastify instance
-  app.decorate('featureFlags', {})
+  // app.decorate('featureFlags', {})
   done();
 }
 
