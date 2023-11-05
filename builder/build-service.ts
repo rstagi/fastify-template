@@ -1,16 +1,21 @@
 import fastify, { FastifyInstance } from 'fastify';
 import fastifyEnv from '@fastify/env';
-import { JSONSchema } from 'json-schema-to-ts';
+import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 
 type DecoratedFastify<T> = FastifyInstance & {
   config: T;
 };
 
-export default function build<T extends { PORT: number }>(
-  envSchema: JSONSchema,
-  buildService: (fastify: DecoratedFastify<T>) => Promise<void>,
+type ConfigFromSchema<Schema extends JSONSchema | undefined> =
+  Schema extends JSONSchema ? FromSchema<Schema> : any; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+export default function build<T extends JSONSchema | undefined>(
+  envSchema: T,
+  buildService: (
+    fastify: DecoratedFastify<ConfigFromSchema<T>>,
+  ) => Promise<void>,
 ) {
-  return async (configData?: T) => {
+  return async (configData?: ConfigFromSchema<T>) => {
     const app = await registerEnv(fastify(), envSchema, configData);
 
     await buildService(app);
@@ -26,7 +31,7 @@ export default function build<T extends { PORT: number }>(
 
 async function registerEnv<T>(
   app: FastifyInstance,
-  schema: JSONSchema,
+  schema: JSONSchema | undefined,
   data?: T,
 ) {
   await app.register(fastifyEnv, {
