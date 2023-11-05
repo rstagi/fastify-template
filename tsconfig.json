@@ -1,9 +1,22 @@
 {
-  "extends": "@tsconfig/node-lts/tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
+    "declaration": true,
+    "inlineSources": true,
     "outDir": "dist",
-    "rootDir": "src",
-    "resolveJsonModule": true,
-    "baseUrl": "./src"
-  }
+    "rootDir": ".",
+    "composite": true,
+    "sourceMap": true,
+    "sourceRoot": "/",
+
+    "allowUnreachableCode": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "references": [{ "path": "./src" }, { "path": "./builder/" }, { "path": "./test" }],
+  "files": []
 }
