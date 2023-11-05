@@ -1,9 +1,19 @@
-import build from "./app.js"
+import { FromSchema } from 'json-schema-to-ts';
+import build from '../builder/build-service.js';
 
-const app = await build(process.env as any);
-app.listen({ host: "0.0.0.0", port: 8080 }, (err, address) => {
-  if (err) {
-    app.log.fatal(err)
-    process.exit(1)
-  }
-})
+const schema = {
+  type: 'object',
+  required: ['PORT'],
+  properties: {
+    PORT: {
+      type: 'number',
+      default: 3000,
+    },
+  },
+} as const;
+
+type ConfigSchema = FromSchema<typeof schema>;
+
+export default build<ConfigSchema>(schema, async (fastify) => {
+  console.log(fastify.config.PORT);
+});
