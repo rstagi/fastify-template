@@ -17,6 +17,9 @@ export default function build<T extends JSONSchema | undefined>(
 ) {
   return async (configData?: ConfigFromSchema<T>) => {
     const app = await registerEnv(fastify(), envSchema, configData);
+    // TODO: add fastify swagger
+    // TODO: add fastify swagger ui
+    // TODO: add fastify under pressure
 
     await buildService(app);
 
