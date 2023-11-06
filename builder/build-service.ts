@@ -8,22 +8,31 @@ import fastifyUnderPressure from "@fastify/under-pressure";
 // @ts-ignore
 import type { FastifyMongodbOptions } from "@fastify/mongodb";
 
-type DecoratedFastify<T> = FastifyInstance & {
-  config: T;
+type DecoratedFastify<
+  Plugins extends PluginsConfig,
+  Config,
+> = FastifyInstance & {
+  plugins?: Plugins;
+  config: Config;
 };
 
 type ConfigFromSchema<Schema extends JSONSchema | undefined> =
   Schema extends JSONSchema ? FromSchema<Schema> : any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-export default function build<ConfigSchema extends JSONSchema | undefined>(
+type PluginsConfig = {
+  mongodb?: false | FastifyMongodbOptions;
+};
+
+export default function build<
+  Plugins extends PluginsConfig,
+  ConfigSchema extends JSONSchema | undefined,
+>(
   config: {
-    plugins?: {
-      mongodb?: false | FastifyMongodbOptions;
-    };
+    plugins?: Plugins;
     envSchema: ConfigSchema;
   },
   buildService: (
-    fastify: DecoratedFastify<ConfigFromSchema<ConfigSchema>>,
+    fastify: DecoratedFastify<Plugins, ConfigFromSchema<ConfigSchema>>,
   ) => Promise<void>,
 ) {
   const { plugins: { mongodb = false } = {} } = config;
