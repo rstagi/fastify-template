@@ -1,5 +1,6 @@
 {
   "extends": "@tsconfig/node20/tsconfig.json",
+  "compileOnSave": true,
   "compilerOptions": {
     "declaration": true,
     "inlineSources": true,
@@ -17,6 +18,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "references": [{ "path": "./src" }, { "path": "./builder/" }, { "path": "./test" }],
+  "references": [{ "path": "./src" }, { "path": "./builder" }, { "path": "./test" }],
   "files": []
 }

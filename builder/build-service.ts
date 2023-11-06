@@ -1,9 +1,9 @@
-import fastify, { FastifyInstance } from "fastify";
-import fastifyEnv from "@fastify/env";
-import { FromSchema, JSONSchema } from "json-schema-to-ts";
-import fastifySwagger from "@fastify/swagger";
-import fastifySwaggerUI from "@fastify/swagger-ui";
-import fastifyUnderPressure from "@fastify/under-pressure";
+import fastify, { FastifyInstance } from 'fastify';
+import fastifyEnv from '@fastify/env';
+import { FromSchema, JSONSchema } from 'json-schema-to-ts';
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUI from '@fastify/swagger-ui';
+import fastifyUnderPressure from '@fastify/under-pressure';
 
 type DecoratedFastify<T> = FastifyInstance & {
   config: T;
@@ -19,7 +19,13 @@ export default function build<T extends JSONSchema | undefined>(
   ) => Promise<void>,
 ) {
   return async (configData?: ConfigFromSchema<T>) => {
-    const app = await registerEnv(fastify(), envSchema, configData);
+    const app = await registerEnv(
+      fastify({
+        logger: { level: configData?.LOG_LEVEL ?? 'info' },
+      }),
+      envSchema,
+      configData,
+    );
 
     app.register(fastifySwagger); // TODO: make it customizable
     app.register(fastifySwaggerUI); // TODO: make it customizable
@@ -28,7 +34,7 @@ export default function build<T extends JSONSchema | undefined>(
     await buildService(app);
     await app.ready();
 
-    app.listen({ host: "0.0.0.0", port: app.config.PORT || 3000 }, (err) => {
+    app.listen({ host: '0.0.0.0', port: app.config.PORT || 3000 }, (err) => {
       if (err) {
         app.log.fatal(err);
         process.exit(1);
