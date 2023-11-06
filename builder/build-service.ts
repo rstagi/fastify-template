@@ -1,6 +1,9 @@
 import fastify, { FastifyInstance } from "fastify";
 import fastifyEnv from "@fastify/env";
 import { FromSchema, JSONSchema } from "json-schema-to-ts";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUI from "@fastify/swagger-ui";
+import fastifyUnderPressure from "@fastify/under-pressure";
 
 type DecoratedFastify<T> = FastifyInstance & {
   config: T;
@@ -17,11 +20,13 @@ export default function build<T extends JSONSchema | undefined>(
 ) {
   return async (configData?: ConfigFromSchema<T>) => {
     const app = await registerEnv(fastify(), envSchema, configData);
-    // TODO: add fastify swagger
-    // TODO: add fastify swagger ui
-    // TODO: add fastify under pressure
+
+    app.register(fastifySwagger); // TODO: make it customizable
+    app.register(fastifySwaggerUI); // TODO: make it customizable
+    app.register(fastifyUnderPressure); // TODO: make it customizable
 
     await buildService(app);
+    await app.ready();
 
     app.listen({ host: "0.0.0.0", port: app.config.PORT || 3000 }, (err) => {
       if (err) {
