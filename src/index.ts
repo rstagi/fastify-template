@@ -15,11 +15,11 @@ const run = build(
   {
     plugins: {
       mongodb: false,
+      telegraf: false,
     },
     envSchema,
   },
   async (fastify) => {
-    // TODO: add fastify mongodb
     // TODO: add telegram bot utilies (as plugin)
     // TODO: add openai utilities (as plugin)
     fastify.log.info(fastify.config.PORT);

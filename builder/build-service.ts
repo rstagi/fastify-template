@@ -7,6 +7,7 @@ import fastifyUnderPressure from "@fastify/under-pressure";
 
 // @ts-ignore
 import type { FastifyMongodbOptions } from "@fastify/mongodb";
+import type { TelegrafPluginOptions } from "./plugins/telegraf"; // TODO: move to its own package
 
 type DecoratedFastify<
   Plugins extends PluginsConfig,
@@ -21,6 +22,7 @@ type ConfigFromSchema<Schema extends JSONSchema | undefined> =
 
 type PluginsConfig = {
   mongodb?: false | FastifyMongodbOptions;
+  telegraf?: false | TelegrafPluginOptions;
 };
 
 export default function build<
@@ -35,7 +37,7 @@ export default function build<
     fastify: DecoratedFastify<Plugins, ConfigFromSchema<ConfigSchema>>,
   ) => Promise<void>,
 ) {
-  const { plugins: { mongodb = false } = {} } = config;
+  const { plugins: { mongodb = false, telegraf = false } = {} } = config;
   return async (configData?: ConfigFromSchema<ConfigSchema>) => {
     const fastify = await registerEnv(
       require("fastify")({
@@ -52,13 +54,16 @@ export default function build<
     if (mongodb) {
       fastify.register(require("@fastify/mongodb"), mongodb);
     }
+    if (telegraf) {
+      fastify.register(require("./plugins/telegraf"), telegraf);
+    }
 
     await buildService(fastify);
     await fastify.ready();
 
     fastify.listen(
       { host: "0.0.0.0", port: fastify.config.PORT || 3000 },
-      (err) => {
+      (err: unknown) => {
         if (err) {
           fastify.log.fatal(err);
           process.exit(1);
