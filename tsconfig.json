@@ -5,5 +5,16 @@
     "rootDir": "src",
     "resolveJsonModule": true,
     "baseUrl": "./src"
+
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "noUncheckedIndexedAccess": true,
+    
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+
+    "sourceMap": true
   }
 }
